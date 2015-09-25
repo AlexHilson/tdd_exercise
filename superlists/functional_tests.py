@@ -12,6 +12,11 @@ class NewVisitor(unittest.TestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def check_text_in_todo_list(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
     def test_start_and_retrieve_list(self):
         # User visits homepage of to-do app.
         self.browser.get('http://localhost:8000')
@@ -29,30 +34,21 @@ class NewVisitor(unittest.TestCase):
         )
 
         # They type 'Buy peacock feathers' into a text box.
-        todo_item1 = 'Buy peacock feathers'
-        inputbox.send_keys(todo_item1)
-
         # When they hit enter, the page updates and the page lists
         # "1. Buy peacock feathers" as an item in a to-do list table.
+        inputbox.send_keys('Buy peacock feathers')
         inputbox.send_keys(Keys.ENTER)
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: %s' % (todo_item1), [row.text for row in rows])
+        self.check_text_in_todo_list_table('1: Buy peacock feathers')
 
-        # There is still a text box they can use to add another item. They 
+        # There is still a text box they can use to add another item. They
         # enter "Use peacock feathers to make a fly"
+        # When they hit enter, the page updates and the page shows both items.
         inputbox = self.browser.find_element_by_id('id_new_item')
-        todo_item2 = 'Use peacock feathers to make a fly'
-        inputbox.send_keys(todo_item2)
-
-        # When they hit enter, the page updates and the page lists
-        # "2. Use peacock feathers to make a fly" as an item in a to-do list table.
+        inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        
-        self.assertIn('1: %s' % (todo_item1), [row.text for row in rows])
-        self.assertIn('2: %s' % (todo_item2), [row.text for row in rows])
+        self.check_text_in_todo_list('1: Buy peacock feathers')
+        self.check_text_in_todo_list('2: Use peacock feathers to make a fly')
+
         self.fail("Finish the test!")
         
 if __name__ == '__main__':
