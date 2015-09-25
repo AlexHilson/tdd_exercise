@@ -38,7 +38,7 @@ class NewVisitor(unittest.TestCase):
         # "1. Buy peacock feathers" as an item in a to-do list table.
         inputbox.send_keys('Buy peacock feathers')
         inputbox.send_keys(Keys.ENTER)
-        self.check_text_in_todo_list_table('1: Buy peacock feathers')
+        self.check_text_in_todo_list('1: Buy peacock feathers')
 
         # There is still a text box they can use to add another item. They
         # enter "Use peacock feathers to make a fly"
