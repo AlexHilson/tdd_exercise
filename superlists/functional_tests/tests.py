@@ -1,9 +1,10 @@
 import unittest
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-class NewVisitor(unittest.TestCase): 
+class NewVisitor(LiveServerTestCase): 
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -19,7 +20,7 @@ class NewVisitor(unittest.TestCase):
 
     def test_start_and_retrieve_list(self):
         # User visits homepage of to-do app.
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
 
         # They notice that the title and header mention to-do lists.
         self.assertIn('To-Do', self.browser.title)
@@ -50,6 +51,3 @@ class NewVisitor(unittest.TestCase):
         self.check_text_in_todo_list('2: Use peacock feathers to make a fly')
 
         self.fail("Finish the test!")
-        
-if __name__ == '__main__':
-    unittest.main()
