@@ -1,10 +1,24 @@
 import unittest
+import sys
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 class NewVisitor(StaticLiveServerTestCase): 
+    @classmethod
+    def setUpClass(cls):
+        for arg in sys.argv:
+            if 'liveserver' in arg:
+                cls.server_url = arg.split('=')[1]
+                return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_url == cls.live_server_url:
+            super().tearDownClass()
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -20,7 +34,7 @@ class NewVisitor(StaticLiveServerTestCase):
 
     def test_start_and_retrieve_list(self):
         # A user named Edith visits homepage of to-do app.
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
 
         # Edith notices that the title and header mention to-do lists.
         self.assertIn('To-Do', self.browser.title)
@@ -60,7 +74,7 @@ class NewVisitor(StaticLiveServerTestCase):
         self.browser = webdriver.Firefox()
         
         # Francis visits the home page. There is no sign of Edith's list.
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('User peacock feathers to make a fly', page_text)
@@ -85,7 +99,7 @@ class NewVisitor(StaticLiveServerTestCase):
         ## not to validate the style.
 
         # Edith goes to the home page.
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
 
         # She notices that the input box is nicely centered.
