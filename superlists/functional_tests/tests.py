@@ -1,10 +1,10 @@
 import unittest
 
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
-class NewVisitor(LiveServerTestCase): 
+class NewVisitor(StaticLiveServerTestCase): 
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -81,6 +81,9 @@ class NewVisitor(LiveServerTestCase):
         self.assertIn('Buy milk', page_text)
 
     def test_layout_and_styling(self):
+        ## Idea here is to test static components are loaded (CSS, Bootstrap),
+        ## not to validate the style.
+
         # Edith goes to the home page.
         self.browser.get(self.live_server_url)
         self.browser.set_window_size(1024, 768)
