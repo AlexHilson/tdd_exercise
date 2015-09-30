@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
     sudo apt-get install -y python3-pip xvfb firefox
     sudo pip3 install django==1.8
     sudo pip3 install --upgrade selenium
+    sudo pip3 install virtualenv
     
     Xvfb :99&
     echo "export DISPLAY=:99" >> ~/.profile
